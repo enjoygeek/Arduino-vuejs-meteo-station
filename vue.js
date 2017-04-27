@@ -7,6 +7,7 @@ var channel = "weather-channel";
 pubnub.addListener({ //Listener for current temperature from arduino
     message: function(m) {
         app.temperature = JSON.stringify(m.message.temperature);
+        app.rain = JSON.stringify(m.message.rainData);
     }
 });
 
@@ -19,7 +20,8 @@ pubnub.subscribe({
 var app = new Vue({
     el: "#app",
     data: {
-        temperature:'Waiting for temp...'
+        temperature:'Waiting for temp...',
+        rain:false
     },
 
 });
