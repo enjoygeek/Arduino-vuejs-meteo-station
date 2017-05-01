@@ -1,0 +1,15 @@
+.fa-tint{
+    color: lightblue;
+    font-size: 25px;
+}
+.fade-enter-active, .fade-leave-to{
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to  {
+  opacity: 0
+}
+#chart{
+    .c3-line-[id]{
+        stroke-width: 30px;
+    }
+}

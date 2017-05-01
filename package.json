@@ -1,5 +1,5 @@
 {
-  "name": "arduRGB",
+  "name": "arduMeteo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "johnny-five": "^0.10.9",
+    "johnny-five": "^0.10.10",
     "pubnub": "^4.8.0"
   }
 }

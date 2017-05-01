@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://unpkg.com/vue" charset="utf-8"></script> <!--Vue CDN -->
-    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.8.0.js"></script> <!--PubNub CDN -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <script src="https://unpkg.com/vue" charset="utf-8"></script>
+    <!--Vue CDN -->
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.8.0.js"></script>
+    <!--PubNub CDN -->
+    <script type="text/javascript" src="https://pubnub.github.io/eon/v/eon/1.0.0/eon.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://pubnub.github.io/eon/v/eon/1.0.0/eon.css"/>
+    <link rel="stylesheet" href="style.css">
     <title>control</title>
 </head>
+
 <body>
-<div id="app">
-{{temperature}}
-{{rain}}
-</div>
+    <div id="app">
+        <span>{{temperature}}</span><br>
+        <div id="chart"></div>
+        <comp-temp v-bind:raindata="rain" id="rain_component" v-show="rain"> <!-- v-bind:raindata="rain" we are binding our prop to declared app.rain in main app -->
+            <transition name="fade"> <!-- transition animation for rain displaying-->
+                <span>Идет дождь<br>
+                <i class="fa fa-tint" aria-hidden="true"></i></span>
+            </transition>
+        </comp-temp>
+    </div>
 </body>
-    <script src="vue.js" charset="utf-8"></script> <!-- Client app js -->
+<!-- Client vue.js -->
+<script src="vue.js" charset="utf-8"></script>
 </html>

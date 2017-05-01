@@ -9,15 +9,14 @@ var pubnub = new PubNub({
 
 var channel = "weather-channel";
 
-var temp_data; //Initializing temperature value to send
-var ledRain;
+var temp_data = 0; //Initializing temperature value to send
+var ledRain = false;
 
 five.Board().on("ready", function() {
     var led = new five.Led(13);
     var thermometer = new five.Thermometer({
         controller: "DS18B20",
-        pin: 7,
-        freq: 10
+        pin: 7
     });
     thermometer.on("change", function() {
         temp_data = this.celsius; //Getting temp value from sensor
@@ -35,19 +34,30 @@ five.Board().on("ready", function() {
     });
 
     setInterval(function pushVue() {
-        pubnub.publish({ //Publishing LED data to vue.js app
-            message:{
-            rainData: ledRain,
-            temperature: temp_data
+        pubnub.publish({ //Publishing temp data to vue.js app
+            message: {
+                temperature: temp_data,
+                rainData:ledRain
             },
             channel: channel,
-            });
-    },1000);
+        });
+    }, 1000);
 
-    this.repl.inject({
-        log: function(){
-        console.log("Temperature " + temp_data);
-        console.log("Rain " + ledRain);
+    setInterval(function publishChart(){ //Publishing temp data to CHART
+        pubnub.publish({
+            message: {
+                eon:{
+                    "Температура":temp_data
+                }
+            },
+            channel: 'chart',
+        });
+    },60000);
+
+    this.repl.inject({ //Node console data check
+        log: function() {
+            console.log("Temperature " + temp_data);
+            console.log("Rain " + ledRain);
 
         }
     });
@@ -55,6 +65,6 @@ five.Board().on("ready", function() {
     //Subscribing for channel
     console.log("Subscribing...");
     pubnub.subscribe({
-        channels: [channel]
+        channels: [channel,"chart"]
     });
 });
