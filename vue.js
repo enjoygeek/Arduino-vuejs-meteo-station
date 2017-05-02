@@ -1,8 +1,10 @@
 var pubnub = new PubNub({
     subscribeKey: "sub-c-10949dfc-27ba-11e7-bc52-02ee2ddab7fe",
-    publishKey: "pub-c-d8e35ee6-911e-4428-b061-388e4708dadc"
+    publishKey: "pub-c-d8e35ee6-911e-4428-b061-388e4708dadc",
+    uuid: "myClient"
 });
 var channel = "weather-channel";
+
 pubnub.addListener({ //Listener for current temperature from arduino
     message: function(m) {
         app.temperature = JSON.stringify(m.message.temperature);
@@ -12,8 +14,20 @@ pubnub.addListener({ //Listener for current temperature from arduino
 
 console.log("subscribing..."); //Subscribing for channel
 pubnub.subscribe({
-    channels: [channel,"chart"]
+    channels: [channel],
+    withPresence: true
 });
+
+pubnub.hereNow(
+    {
+        includeUUIDs: true,
+        includeState: true
+    },
+    function (status, response) {
+    console.log(status,response);
+    }
+);
+
 
 var rainComp = Vue.extend({ //Component for rain notification
     props: ['raindata'], //Component prop for getting rain data from app.data
@@ -31,20 +45,41 @@ var app = new Vue({
     }
 });
 
-eon.chart({     //Chart
+eon.chart({ //Chart
     pubnub: pubnub,
-    channels: ['chart'],
+    uuid:'chartId',
+    channels: [channel],
     history: true,
     flow: true,
-    limit: 20,
+    limit: 10,
     generate: {
         bindto: '#chart',
         data: {
             type: 'spline',
             labels: true,
         },
-        zoom:{
-            enabled:true
+        axis: {
+            x: {
+                type: 'timeseries',
+                localtime: false,
+                tick: {
+                    format: '%H:%M'
+                }
+            }
+        },
+        grid: {
+            x: {
+                show: true
+            },
+            y: {
+                show: true
+            }
+        },
+        transition: {
+            duration: 500
+        },
+        zoom: {
+            enabled: true
         }
     }
 });

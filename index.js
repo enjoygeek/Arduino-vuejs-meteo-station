@@ -1,14 +1,15 @@
 var five = require("johnny-five");
 var PubNub = require("pubnub");
-var newUUID = PubNub.generateUUID();
+
+var newUUID = 'myDevice';
 var pubnub = new PubNub({
     subscribeKey: "sub-c-10949dfc-27ba-11e7-bc52-02ee2ddab7fe",
     publishKey: "pub-c-d8e35ee6-911e-4428-b061-388e4708dadc",
-    uuid: newUUID
+    uuid:newUUID
 });
 
-var channel = "weather-channel";
 
+var channel = "weather-channel";
 var temp_data = 0; //Initializing temperature value to send
 var ledRain = false;
 
@@ -33,38 +34,44 @@ five.Board().on("ready", function() {
         }
     });
 
+    (function initialPusblish() {
+        pubnub.publish({
+            message: {
+                temperature: temp_data,
+                rainData: ledRain,
+                eon: {
+                    "Температура": temp_data
+                },
+            },
+            channel: channel,
+        });
+    }());
+
     setInterval(function pushVue() {
         pubnub.publish({ //Publishing temp data to vue.js app
             message: {
                 temperature: temp_data,
-                rainData:ledRain
+                rainData: ledRain,
+                eon: {
+                    "Температура": temp_data
+                },
             },
             channel: channel,
         });
-    }, 1000);
+    }, 60000);
 
-    setInterval(function publishChart(){ //Publishing temp data to CHART
-        pubnub.publish({
-            message: {
-                eon:{
-                    "Температура":temp_data
-                }
-            },
-            channel: 'chart',
-        });
-    },60000);
 
     this.repl.inject({ //Node console data check
         log: function() {
             console.log("Temperature " + temp_data);
             console.log("Rain " + ledRain);
-
         }
     });
 
     //Subscribing for channel
     console.log("Subscribing...");
     pubnub.subscribe({
-        channels: [channel,"chart"]
+        channels: [channel],
+        withPresence: true
     });
 });

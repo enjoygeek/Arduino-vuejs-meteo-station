@@ -14,3 +14,7 @@
 #chart .c3-line-[id] {
   stroke-width: 30px;
 }
+
+#chart .c3-grid {
+  color: green;
+}
