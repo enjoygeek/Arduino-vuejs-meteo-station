@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,23 +10,28 @@
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.8.0.js"></script>
     <!--PubNub CDN -->
     <script type="text/javascript" src="https://pubnub.github.io/eon/v/eon/1.0.0/eon.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://pubnub.github.io/eon/v/eon/1.0.0/eon.css"/>
+    <link type="text/css" rel="stylesheet" href="https://pubnub.github.io/eon/v/eon/1.0.0/eon.css" />
     <link rel="stylesheet" href="style.css">
     <title>control</title>
 </head>
 
 <body>
     <div id="app">
-        <span>{{temperature}}</span><br>
+        <span>{{temperature}}°</span><br>
         <div id="chart"></div>
-        <comp-temp v-bind:raindata="rain" id="rain_component" v-show="rain"> <!-- v-bind:raindata="rain" we are binding our prop to declared app.rain in main app -->
-            <transition name="fade"> <!-- transition animation for rain displaying-->
+        <comp-rain v-bind:raindata="rain" id="rain_component" v-show="rain">
+            <!-- v-bind:raindata="rain" we are binding our prop to declared app.rain in main app -->
+            <transition name="fade">
+                <!-- transition animation for rain displaying-->
                 <span>Идет дождь<br>
                 <i class="fa fa-tint" aria-hidden="true"></i></span>
             </transition>
-        </comp-temp>
+        </comp-rain>
+        <comp-hym v-bind:humidity="hym" id="hym_component">
+        </comp-hym>
     </div>
 </body>
 <!-- Client vue.js -->
 <script src="vue.js" charset="utf-8"></script>
+
 </html>

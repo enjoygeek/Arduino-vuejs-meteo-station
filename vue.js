@@ -9,6 +9,7 @@ pubnub.addListener({ //Listener for current temperature from arduino
     message: function(m) {
         app.temperature = JSON.stringify(m.message.temperature);
         app.rain = m.message.rainData;
+        app.hym = m.message.hym;
     }
 });
 
@@ -18,36 +19,43 @@ pubnub.subscribe({
     withPresence: true
 });
 
-pubnub.hereNow(
-    {
+pubnub.hereNow({
         includeUUIDs: true,
         includeState: true
     },
-    function (status, response) {
-    console.log(status,response);
+    function(status, response) {
+        console.log(status, response);
     }
 );
 
 
 var rainComp = Vue.extend({ //Component for rain notification
     props: ['raindata'], //Component prop for getting rain data from app.data
-    template: '#rain_component'
+    template: '#rain_component',
+
 });
 
-Vue.component('comp-temp', rainComp); //Declaring component
+var hymComp = Vue.extend({
+    props: ['humidity'],
+    template: '<span><br>{{humidity}}%</span>'
+});
+
+Vue.component('comp-hym', hymComp);
+Vue.component('comp-rain', rainComp); //Declaring component
 
 
 var app = new Vue({
     el: "#app",
     data: {
         temperature: 'Waiting for temp...',
-        rain: false
+        rain: false,
+        hym: 0
     }
 });
 
 eon.chart({ //Chart
     pubnub: pubnub,
-    uuid:'chartId',
+    uuid: 'chartId',
     channels: [channel],
     history: true,
     flow: true,
